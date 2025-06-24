@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}DNS-провайдеры по AS{% endblock %}
+{% block header %}DNS-провайдеры по автономным системам{% endblock %}
+
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>ASN</th>
+        <th>Провайдер</th>
+        <th>Кол-во уникальных IP резолверов</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for asn, desc, count in providers %}
+      <tr>
+        <td>{{ asn or 'N/A' }}</td>
+        <td>{{ desc or 'N/A' }}</td>
+        <td>{{ count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}Мониторинг DNS/HTTP{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>{% block header %}{% endblock %}</h1>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    {% block footer %}
+      <p><a href="/">Главная</a></p>
+    {% endblock %}
+  </footer>
+</body>
+</html>

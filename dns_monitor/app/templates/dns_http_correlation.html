@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Сопоставление HTTP и DNS{% endblock %}
+{% block header %}Сопоставленные HTTP и DNS-запросы{% endblock %}
+
+{% block content %}
+  <table>
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Время HTTP</th>
+        <th>Путь</th>
+        <th>Домен</th>
+        <th>Время DNS</th>
+        <th>ASN</th>
+        <th>Провайдер</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ip, http_time, path, domain, dns_time, asn, desc in results %}
+      <tr>
+        <td>{{ ip }}</td>
+        <td>{{ http_time }}</td>
+        <td>{{ path }}</td>
+        <td>{{ domain }}</td>
+        <td>{{ dns_time }}</td>
+        <td>{{ asn or 'N/A' }}</td>
+        <td>{{ desc or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

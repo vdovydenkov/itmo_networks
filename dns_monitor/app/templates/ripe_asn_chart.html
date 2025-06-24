@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Статистика RIPE NCC{% endblock %}
+{% block header %}Статистика выделения AS российским LIR по годам (RIPE NCC){% endblock %}
+
+{% block content %}
+  <div id="ripeAsChartContainer">
+    <div id="chart-loader">Загрузка данных для графика...</div>
+    <canvas id="ripeAsChart" style="display: none;"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chartCanvas = document.getElementById('ripeAsChart');
+        const chartLoader = document.getElementById('chart-loader');
+
+        chartLoader.style.display = 'block';
+        chartCanvas.style.display = 'none';
+
+        fetch('/api/ripe_as_stats')
+            .then(response => response.json())
+            .then(data => {
+                chartLoader.style.display = 'none';
+                chartCanvas.style.display = 'block';
+
+                const years = data.map(item => item.year);
+                const counts = data.map(item => item.count);
+
+                new Chart(chartCanvas, {
+                    type: 'bar',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Количество выделенных AS',
+                            data: counts,
+                            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 1,
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Количество выделенных AS российским LIR по годам',
+                                font: { size: 18, weight: 'bold' },
+                                color: '#2c3e50'
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0,0,0,0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#3498db',
+                                borderWidth: 1,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Год',
+                                    font: { size: 14, weight: 'bold' },
+                                    color: '#555'
+                                },
+                                grid: { display: false }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Количество AS',
+                                    font: { size: 14, weight: 'bold' },
+                                    color: '#555'
+                                },
+                                beginAtZero: true,
+                                grid: { color: '#e0e0e0' }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                chartLoader.style.display = 'none';
+                const errorDiv = document.createElement('div');
+                errorDiv.textContent = 'Ошибка загрузки данных';
+                errorDiv.style.color = 'red';
+                errorDiv.style.textAlign = 'center';
+                chartCanvas.parentNode.insertBefore(errorDiv, chartCanvas);
+                chartCanvas.style.display = 'none';
+            });
+    });
+  </script>
+{% endblock %}

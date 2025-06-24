@@ -1,0 +1,35 @@
+﻿{% extends "base.html" %}
+
+{% block title %}DNS-запросы{% endblock %}
+{% block header %}DNS-запросы с информацией об AS{% endblock %}
+
+{% block content %}
+  <form method="post" action="/add_dns_log">
+    <label>IP резолвера: <input type="text" name="resolver_ip" required></label>
+    <label>Домен: <input type="text" name="domain" required></label>
+    <button type="submit">Добавить</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>IP резолвера</th>
+        <th>Домен</th>
+        <th>Время</th>
+        <th>ASN</th>
+        <th>Провайдер</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ip, domain, timestamp, asn, desc in records %}
+      <tr>
+        <td>{{ ip }}</td>
+        <td>{{ domain }}</td>
+        <td>{{ timestamp }}</td>
+        <td>{{ asn or 'N/A' }}</td>
+        <td>{{ desc or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

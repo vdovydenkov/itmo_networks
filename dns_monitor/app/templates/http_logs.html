@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}HTTP-запросы{% endblock %}
+{% block header %}Логи HTTP-запросов{% endblock %}
+
+{% block content %}
+  <div id="loader">Загрузка статистики...</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>IP</th>
+        <th>Время</th>
+        <th>Путь</th>
+        <th>ASN</th>
+        <th>Описание</th>
+      </tr>
+    </thead>
+    <tbody id="log-table">
+      {% for ip, timestamp, path, asn, asn_desc in logs %}
+      <tr>
+        <td>{{ ip }}</td>
+        <td>{{ timestamp }}</td>
+        <td>{{ path }}</td>
+        <td>{{ asn or '—' }}</td>
+        <td>{{ asn_desc or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p><a href="/dns_requests">Посмотреть DNS-запросы</a></p>
+  <p><a href="/dns_as_stats">Посмотреть DNS-провайдеров по AS</a></p>
+  <p><a href="/dns_http_correlation">Сопоставить HTTP и DNS запросы</a></p>
+  <p><a href="/ripe_asn_chart">Посмотреть статистику RIPE NCC по AS</a></p>
+
+  <script src="{{ url_for('static', filename='measure.js') }}"></script>
+  <script>
+    const loader = document.getElementById("loader");
+    loader.style.display = "block";
+
+    fetch("/api/as_stats")
+      .then(resp => resp.json())
+      .then(data => {
+        console.log("Статистика по ASN:", data);
+        // Here you would typically render this data somewhere on the page,
+        // for example, in a new table or chart. For now, it's just logged.
+      })
+      .catch(err => {
+        console.error("Ошибка загрузки статистики:", err);
+      })
+      .finally(() => {
+        loader.style.display = "none";
+      });
+  </script>
+{% endblock %}
