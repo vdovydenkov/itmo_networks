@@ -1,0 +1,19 @@
+CREATE TABLE http_logs (
+    id SERIAL PRIMARY KEY,
+    ip TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
+    path TEXT
+);
+
+CREATE TABLE dns_logs (
+    id SERIAL PRIMARY KEY,
+    resolver_ip TEXT NOT NULL,
+    domain TEXT NOT NULL,
+    timestamp TIMESTAMP NOT NULL
+);
+
+CREATE TABLE as_info (
+    ip TEXT PRIMARY KEY,
+    asn TEXT,
+    asn_desc TEXT
+);
